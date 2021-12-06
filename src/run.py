@@ -37,8 +37,10 @@ def run(_run, _config, _log):
     try:
         map_name = _config["env_args"]["map_name"]
     except:
-        map_name = _config["env_args"]["key"]   
-    unique_token = f"{_config['name']}_seed{_config['seed']}_{map_name}_{datetime.datetime.now()}"
+        map_name = _config["env_args"]["key"]
+    unique_token = (
+        f"{_config['name']}_seed{_config['seed']}_{map_name}_{datetime.datetime.now()}"
+    )
 
     args.unique_token = unique_token
     if args.use_tensorboard:
@@ -47,6 +49,9 @@ def run(_run, _config, _log):
         )
         tb_exp_direc = os.path.join(tb_logs_direc, "{}").format(unique_token)
         logger.setup_tb(tb_exp_direc)
+
+    if args.use_wandb:
+        logger.setup_wandb(args)
 
     # sacred is on by default
     logger.setup_sacred(_run)
